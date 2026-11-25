@@ -13,11 +13,24 @@ in
   sops = {
     defaultSopsFile = ../../../secrets/secrets.yaml;
 
-    secrets."${username}-pass" = {
-      neededForUsers = true;
-      key = "${username}-pass";
-      group = "users";
-      mode = "0440";
+    secrets = {
+      "${username}_password" = {
+        neededForUsers = true;
+        key = "${username}_password";
+        group = "users";
+        mode = "0440";
+      };
+      soulseek_username = { };
+      soulseek_password = { };
+      slskd_password = { };
+    };
+    templates = {
+      "slskd_env".content = ''
+        SLSKD_SLSK_USERNAME=${config.sops.placeholder.soulseek_username}
+        SLSKD_SLSK_PASSWORD=${config.sops.placeholder.soulseek_password}
+        SLSKD_USERNAME=${config.sops.placeholder.soulseek_username}
+        SLSKD_PASSWORD=${config.sops.placeholder.slskd_password}
+      '';
     };
 
     age = {
@@ -33,6 +46,6 @@ in
   };
 
   users.users.${username} = {
-    hashedPasswordFile = config.sops.secrets."${username}-pass".path;
+    hashedPasswordFile = config.sops.secrets."${username}_password".path;
   };
 }
