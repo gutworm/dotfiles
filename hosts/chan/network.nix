@@ -10,47 +10,46 @@
     useDHCP = false;
     nftables = {
       enable = true;
-      ruleset = ''
-        flush ruleset
-        table inet filter {
-          chain input {
-        	type filter hook input priority 0; policy drop;
-        	ct state {established, related} counter accept comment "accept all connections related to connections made by us"
-        	ct state invalid counter drop comment "early drop of invalid packets"
-        	iif lo accept comment "accept loopback"
-            iifname "tailscale0" accept comment "Tailscale"
-            udp dport 41641 accept comment "Tailscale UDP"
-        	iif != lo ip daddr 127.0.0.1/8 counter drop comment "drop connections to loopback not coming from loopback"
-        	iif != lo ip6 daddr ::1/128 counter drop comment "drop connections to loopback not coming from loopback"
-            udp sport 67 udp dport 68 counter accept comment "DHCP client replies"
-        	ip protocol icmp counter accept comment "accept all ICMP types"
-        	meta l4proto ipv6-icmp counter accept comment "accept all ICMP types"
-        	udp dport 53 ip daddr 127.0.0.1 counter accept comment "UDP IPv4 local DNS"
-        	tcp dport 53 ip daddr 127.0.0.1 counter accept comment "TCP IPv4 local DNS"
-          	udp dport 53 ip6 daddr ::1 counter accept comment "UDP IPv6 local DNS"
-        	tcp dport 53 ip6 daddr ::1 counter accept comment "TCP IPv6 local DNS"
-            iifname { "enp0s31f6", "wlan0" } tcp dport 53317 accept comment "TCP LocalSend"
-            iifname { "enp0s31f6", "wlan0" } udp dport 53317 accept comment "UDP LocalSend"
-            iifname { "enp0s31f6", "wlan0" } ip daddr 224.0.0.0/4 udp dport 53317 accept
-            #iifname { "enp0s31f6", "wlan0" } tcp dport 1200 accept comment "Python TCP HTTP server"
-            #iifname { "enp0s31f6", "wlan0" } udp dport 1200 accept comment "Python UDP"
-            tcp dport 58530 iifname "tailscale0" accept comment "accept Tailscale SSH"
-            tcp dport 22000 accept comment "Syncthing"
-            udp dport { 22000, 21027 } accept comment "Syncthing"
-        	counter comment "count dropped packets"
-          }
-          chain forward {
-            type filter hook forward priority 0; policy drop;
-            counter comment "count dropped packets"
-          }
-          chain output {
-            type filter hook output priority 0; policy accept;
-            # tcp dport {80,443,2053,2083,2087,2096,8443} queue num 220 comment "TCP Zapret QNUM"
-            # udp dport {443,19294-19344,50000-50100} queue num 220 comment "UDP Zapret QNUM"
-          }
-        }
-      '';
+      flushRuleset = true;
+      tables = {
+        filter = {
+          family = "inet";
+          content = ''
+            chain input {
+              type filter hook input priority 0; policy drop;
+              iif lo accept comment "accept loopback"
+              iif != lo ip daddr 127.0.0.1/8 counter drop comment "drop connections to loopback not coming from loopback"
+              iif != lo ip6 daddr ::1/128 counter drop comment "drop connections to loopback not coming from loopback"
+              ct state {established, related} counter accept comment "accept all connections related to connections made by us"
+              ct state invalid counter drop comment "early drop of invalid packets"
 
+              ip saddr 192.168.31.0/24 tcp dport { 22000, 53317 } accept comment "Syncthing, LocalSend"
+              ip saddr 192.168.31.0/24 udp dport { 21027, 22000, 53317 } accept comment "Syncthing, LocalSend"
+              tcp dport 50300 accept comment "slskd"
+              udp dport 50300 accept comment "slskd"
+
+              # allow "ping"
+              ip6 nexthdr icmpv6 icmpv6 type echo-request accept
+              ip protocol icmp icmp type echo-request accept
+
+              # ICMP
+              ip6 nexthdr icmpv6 icmpv6 type { destination-unreachable, packet-too-big, time-exceeded, parameter-problem, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
+              ip protocol icmp icmp type { destination-unreachable, router-advertisement, time-exceeded, parameter-problem } accept
+
+              counter comment "count dropped packets"
+            }
+
+	    # Allow all outgoing connections.
+            chain output {
+              type filter hook output priority 0; policy accept;
+            }
+
+            chain forward {
+              type filter hook forward priority 0; policy drop;
+            }
+          '';
+        };
+      };
     };
   };
 
