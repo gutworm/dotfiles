@@ -8,12 +8,11 @@
       enable = true;
       settings = {
         user = {
-          name = "mannerbund";
-          email = "apostalimus@gmail.com";
+          name = "gutworm";
+          email = "gvtworm@gmail.com";
         };
         init.defaultBranch = "main";
       };
-      signing.format = "openpgp";
       ignores = [
         ".direnv"
       ];
