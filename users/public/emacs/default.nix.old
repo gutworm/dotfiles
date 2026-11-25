@@ -1,0 +1,125 @@
+{
+  username,
+  inputs,
+  pkgs,
+  ...
+}:
+{
+  nixpkgs = {
+    overlays = [
+      inputs.emacs-overlay.overlays.default
+    ];
+  };
+
+  fonts.packages = with pkgs; [
+    aporetic
+    (iosevka-bin.override { variant = "Aile"; })
+    (iosevka-bin.override { variant = "CurlySlab"; })
+    (iosevka-bin.override { variant = "Etoile"; })
+  ];
+
+  home-manager.users.${username} =
+    {
+      pkgs,
+      ...
+    }:
+    {
+
+      home = {
+        persistence."/persist" = {
+          directories = [ ".emacs.d" ];
+        };
+        sessionVariables = {
+          ALTERNATE_EDITOR = "";
+          EDITOR = "emacsclient -nw"; # $EDITOR opens in terminal
+          VISUAL = "emacsclient -c -a emacs"; # $VISUAL opens in GUI mode
+        };
+        packages = with pkgs; [
+          (aspellWithDicts (
+            dicts: with dicts; [
+              en
+              ru
+            ]
+          ))
+          graphviz
+          nixd
+        ];
+      };
+
+      home.file.".emacs.d/early-init.el".text = ''
+        ;;; early-init.el --- Early Initialization -*- lexical-binding: t; -*-
+        (setq gc-cons-threshold most-positive-fixnum)
+        (setq gc-cons-percentage 1.0)
+        (setq read-process-output-max (* 1024 1024))
+
+        (setq package-quickstart t)
+
+        (setq initial-major-mode 'fundamental-mode)
+
+        (setq inhibit-x-resources t)
+        (setq inhibit-splash-screen t)
+        (setq inhibit-startup-screen t)
+        (setq inhibit-startup-message t)
+        (setq inhibit-startup-buffer-menu t)
+        (setq initial-scratch-message nil)
+        (setq bidi-inhibit-bpa t)
+
+        (menu-bar-mode -1) ;; Don't display menu bar
+        (tool-bar-mode -1) ;; Don't display tool bar
+        (scroll-bar-mode -1) ;; Don't display scroll bar
+
+        (setq line-spacing 0.35)
+
+        ;; 2. Face Configuration
+        (custom-set-faces
+         ;; Default font for all text (Updated to Iosevka Curly Slab, Height 140)
+         '(default ((t (:family "Iosevka Curly Slab" :height 140))))
+         '(fixed-pitch ((t (:family "Iosevka Curly Slab" :height 140))))
+         '(variable-pitch ((t (:family "Iosevka Aile" :height 140))))
+         
+         ;; Added Serif face from your variables
+         '(serif ((t (:family "Iosevka Etoile" :height 140))))
+
+         ;; Current line number
+         '(line-number-current-line ((t (:foreground "yellow" :inherit line-number))))
+         '(mode-line ((t (:family "Iosevka Curly Slab" :weight bold))))
+
+         ;; Syntax Highlighting (Fixed syntax errors & updated fonts)
+         '(font-lock-function-name-face ((t (:family "Iosevka Curly Slab" :slant italic))))
+         '(font-lock-variable-name-face ((t (:family "Iosevka Curly Slab" :weight bold)))))
+
+        ;; 3. Fallback Fonts (Cannot be set inside custom-set-faces)
+        (set-fontset-font t 'unicode "Noto Sans Mono" nil 'append)
+        (dolist (font '("Noto Emoji" "Symbola"))
+          (set-fontset-font t 'symbol font nil 'append))
+        ;;; early-init.el ends here
+      '';
+
+      programs = {
+        info.enable = true;
+        emacs = {
+          enable = true;
+          package = (
+            pkgs.emacsWithPackagesFromUsePackage {
+              package = pkgs.emacs-git-pgtk;
+              config = ./emacs.w.el;
+              defaultInitFile = true;
+              extraEmacsPackages = epkgs: [
+                (epkgs.treesit-grammars.with-grammars (grammars: [
+                  grammars.tree-sitter-python
+                  grammars.tree-sitter-cpp
+                  grammars.tree-sitter-c
+                  grammars.tree-sitter-javascript
+                  grammars.tree-sitter-json
+                  grammars.tree-sitter-nix
+                  grammars.tree-sitter-lua
+                  grammars.tree-sitter-markdown
+                  grammars.tree-sitter-markdown-inline
+                ]))
+              ];
+            }
+          );
+        };
+      };
+    };
+}

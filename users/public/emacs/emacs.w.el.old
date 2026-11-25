@@ -500,6 +500,8 @@
   (eglot-code-action-indications nil)
   (eglot-sync-connect nil)
   :config
+  (setq-default eglot-ignored-server-capabilities
+                '(:snippetSupport))
   (add-to-list 'eglot-server-programs
                '(nix-ts-mode . ("nixd")))
   (add-to-list 'eglot-server-programs
