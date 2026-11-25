@@ -23,6 +23,7 @@
               gdb
               cmake
               ninja
+              ascii
             ];
           };
         };
