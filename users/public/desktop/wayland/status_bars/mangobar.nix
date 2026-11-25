@@ -23,11 +23,23 @@
             "keyboardlayout"
             "cpu"
             "memory"
-            "battery#BAT0"
             "battery#BAT1"
-            "clock#date"
+            "backlight"
             "clock#time"
           ];
+          backlight = {
+            format = "{icon} {percent}%";
+            icons = [
+              "󰃞"
+              "󰃟"
+              "󰃝"
+              "󰃝"
+              "󰃠"
+              "󰃠"
+              "󰃠"
+            ];
+            on-click = "brightnessctl set 1%";
+          };
           tray = {
             icon-size = 25;
             spacing = 10;

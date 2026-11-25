@@ -44,9 +44,6 @@
         CPU_SCALING_GOVERNOR_ON_AC = "performance";
         CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
         CPU_BOOST_ON_AC = 1;
-
-        STOP_CHARGE_THRESH_BAT0 = 90;
-        STOP_CHARGE_THRESH_BAT1 = 90;
       };
     };
   };
@@ -148,7 +145,6 @@
         "nvme"
       ];
       systemd = {
-        enable = true;
         extraBin = {
           "mkdir" = "${pkgs.coreutils}/bin/mkdir";
           "date" = "${pkgs.coreutils}/bin/date";

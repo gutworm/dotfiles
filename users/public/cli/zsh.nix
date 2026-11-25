@@ -51,11 +51,13 @@
         };
         initContent =
           let
-            zshConfig = lib.mkOrder 1000 ''
+            zshConfig = lib.mkOrder 1000 "
               export KEYTIMEOUT=1
-
+              
               bindkey '`' autosuggest-accept
-            '';
+              zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+              zstyle ':completion:*' menu select
+            ";
             zshConfigLast = lib.mkOrder 1500 ''
               source ${pkgs.zsh-fast-syntax-highlighting}/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
             '';

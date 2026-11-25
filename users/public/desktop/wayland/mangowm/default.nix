@@ -55,7 +55,7 @@
           fi
         '')
         (writeShellScriptBin "screenshot-save" ''
-          if grim - | tee "$(xdg-user-dir SCREENSHOTS)/$(date "+%Y-%m-%d_%H-%M-%S_screenshot.png")" | wl-copy; then
+          if grim - | tee "$(xdg-user-dir PICTURES)/Screenshots/$(date "+%Y-%m-%d_%H-%M-%S_screenshot.png")" | wl-copy; then
             notify-send -u low "Screenshot saved"
           else
             notify-send -u normal "Screenshot failed"
@@ -123,7 +123,7 @@
           hotarea_corner = 0;
           disable_middle_paste = 1;
           exec_once = [
-            "swaybg -i ${config.home.homeDirectory}/Pictures/Wallpapers/tyrande.jpg"
+            "swaybg -i $(xdg-user-dir PICTURES)/Wallpapers/tyrande.jpg"
             "gammastep"
           ];
           mousebind = [

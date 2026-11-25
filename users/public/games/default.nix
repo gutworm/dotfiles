@@ -5,7 +5,6 @@
 {
   programs.gamemode.enable = true;
   programs.gamescope.enable = true;
-
   users.users.${username}.extraGroups = [ "gamemode" ];
 
   home-manager.users.${username} =
@@ -39,6 +38,7 @@
               (ro-bind "/sys/class/drm" "/sys/class/drm")
               (rw-bind "${home}/.local/share/Games" "${home}/.local/share/Games")
               (rw-bind "${home}/.local/share/lutris" "${home}/.local/share/lutris")
+              (rw-bind "${home}/.local/share/umu" "${home}/.local/share/umu")
               (rw-bind "${home}/.cache/lutris" "${home}/.cache/lutris")
               (add-pkg-deps [
                 pkgs.gamemode
@@ -55,15 +55,16 @@
       home.persistence."/persist" = {
         directories = [
           ".local/share/lutris"
-          ".cache/lutris"
+          ".local/share/umu"
           ".local/share/Games"
+          ".cache/lutris"
         ];
       };
 
       home.packages = [
-        (jail "jailed-lutris" pkgs.lutris [
-          jail.combinators.lutris-permissions
-        ])
+        # (jail "jailed-lutris" pkgs.lutris [
+        #   jail.combinators.lutris-permissions
+        # ])
       ];
     };
 }

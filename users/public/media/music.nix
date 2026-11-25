@@ -47,6 +47,13 @@
           settings = {
             directory = "${config.home.homeDirectory}/Music/Albums";
             library = "${config.home.homeDirectory}/.local/share/beets/musiclibrary.db";
+            plugins = [
+              "discogs"
+              "convert"
+              "fetchart"
+              "embedart"
+            ];
+            convert.auto = true;
           };
         };
       };

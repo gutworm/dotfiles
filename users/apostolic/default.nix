@@ -38,9 +38,11 @@ in
 
     # network stuff
     ../public/net/ssh.nix
+    ../public/net/slskd.nix
     ../public/net/syncthing.nix
     ../public/net/transmission.nix
-    ../public/net/amneziavpn.nix
+    ../public/net/wireshark.nix
+    # ../public/net/zapret2.nix
 
     # misc
     ../public/xdg.nix
@@ -101,12 +103,12 @@ in
             ".local/share/nix"
             ".local/share/iwctl"
             ".ssh"
-            "Desktop"
+            "Library"
             "Documents"
             "Downloads"
-            "Library"
             "Music"
             "Pictures"
+            "Projects"
             "Videos"
           ];
         };

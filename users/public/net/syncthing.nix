@@ -22,12 +22,12 @@
             path = "/persist/home/${username}/Documents";
             devices = [ "phone" ];
           };
-          library = {
-            path = "/persist/home/${username}/Library";
-            devices = [ "phone" ];
-          };
           music = {
             path = "/persist/home/${username}/Music";
+            devices = [ "phone" ];
+          };
+          library = {
+            path = "/persist/home/${username}/Library";
             devices = [ "phone" ];
           };
         };

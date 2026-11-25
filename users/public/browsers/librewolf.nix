@@ -40,17 +40,11 @@
                   url = "https://github.com";
                 }
                 {
-                  name = "wikipedia";
-                  tags = [ "wiki" ];
-                  keyword = "wiki";
-                  url = "https://en.wikipedia.org/wiki/Special:Search?search=%s&go=Go";
-                }
-                {
-                  name = "cppref";
+                  name = "cppreference";
                   url = "https://cppreference.com";
                 }
                 {
-                  name = "python313";
+                  name = "python";
                   url = "https://docs.python.org/3.13/index.html";
                 }
                 {
@@ -60,6 +54,10 @@
                 {
                   name = "transmission";
                   url = "http://127.0.0.1:9091/transmission/web/";
+                }
+                {
+                  name = "slskd";
+                  url = "http://127.0.0.1:5030/dashboard";
                 }
               ];
             }

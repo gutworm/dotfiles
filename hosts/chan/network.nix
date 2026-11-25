@@ -72,9 +72,6 @@
         };
       };
     };
-    services.tailscaled.serviceConfig.Environment = [
-      "TS_DEBUG_FIREWALL_MODE=nftables"
-    ];
   };
 
   boot.initrd.systemd.network.wait-online.enable = false;
@@ -90,10 +87,6 @@
         UseDns = true;
       };
     };
-    # tailscale = {
-    #   enable = true;
-    #   port = 41641;
-    # };
 
     dnscrypt-proxy = {
       enable = true;
