@@ -42,7 +42,6 @@ in
     ../public/net/syncthing.nix
     ../public/net/transmission.nix
     ../public/net/wireshark.nix
-    # ../public/net/zapret2.nix
 
     # misc
     ../public/xdg.nix
