@@ -101,7 +101,6 @@ in
             ".local/share/keyrings"
             ".local/share/nix"
             ".local/share/iwctl"
-            ".ssh"
             "Library"
             "Documents"
             "Downloads"
