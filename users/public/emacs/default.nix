@@ -26,12 +26,9 @@
           VISUAL = "emacsclient -c -a emacs"; # $VISUAL opens in GUI mode
         };
         packages = with pkgs; [
-          (aspellWithDicts (
-            dicts: with dicts; [
-              en
-              ru
-            ]
-          ))
+	  hunspell
+	  hunspellDicts.en_US
+	  hunspellDicts.ru_RU
         ];
       };
 

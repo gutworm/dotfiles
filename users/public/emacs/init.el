@@ -44,6 +44,13 @@
    :repeat-map other-window-repeat-map
    ("o" . other-window)))
 
+(use-package ispell
+  :config
+  (setq ispell-program-name "hunspell")
+  (ispell-set-spellchecker-params)
+  (ispell-hunspell-add-multi-dic "en_US,ru_RU")
+  (ispell-change-dictionary "en_US,ru_RU" t))
+
 ;; UI
 (menu-bar-mode -1)
 (tool-bar-mode -1)
